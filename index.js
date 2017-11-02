@@ -1,22 +1,27 @@
-var Resource = require('deployd/lib/resource')
-  , util = require('util');
+var Resource = require('deployd/lib/resource'),
+  util = require('util'),
+  fs = require('fs');
 
-function EventResource() {
+function CodeResource(module) {
   Resource.apply(this, arguments);
+
+  this.on('changed', function (config) {
+    delete require.cache[require.resolve(fs.realpathSync('./') + '/resources/' + module)];
+  });
 }
-util.inherits(EventResource, Resource);
+util.inherits(CodeResource, Resource);
 
-EventResource.label = "Code";
-EventResource.events = ["index"];
+CodeResource.label = "Code";
+CodeResource.events = ["index"];
 
-module.exports = EventResource;
+module.exports = CodeResource;
 
-EventResource.prototype.clientGeneration = false;
+CodeResource.prototype.clientGeneration = false;
 
-EventResource.prototype.handle = function (ctx, next) {
+CodeResource.prototype.handle = function (ctx, next) {
   next();
 };
 
-global.requireModule = function(module) {
-  return require(__dirname + '/resources/' + module);
+global.requireModule = function (module) {
+  return require(fs.realpathSync('./') + '/resources/' + module);
 }
