@@ -1,5 +1,7 @@
 ## Code Resource
 
+[![Current Version](https://img.shields.io/npm/v/dpd-codemodule.svg?style=flat-square)](https://www.npmjs.org/package/dpd-codemodule)
+
 This custom resource type allows you to write code that can be `require`d by other resources.
 
 ### Installation
