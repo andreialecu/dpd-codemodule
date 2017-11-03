@@ -1,12 +1,15 @@
 var Resource = require('deployd/lib/resource'),
   util = require('util'),
-  fs = require('fs');
+  fs = require('fs'),
+  path = require('path');
 
-function CodeResource(module) {
+var resourcesPath = fs.realpathSync('./') + '/resources/';
+
+function CodeResource(moduleName) {
   Resource.apply(this, arguments);
 
   this.on('changed', function (config) {
-    delete require.cache[require.resolve(fs.realpathSync('./') + '/resources/' + module)];
+    delete require.cache[require.resolve(resourcesPath + moduleName)];
   });
 }
 util.inherits(CodeResource, Resource);
@@ -23,5 +26,7 @@ CodeResource.prototype.handle = function (ctx, next) {
 };
 
 global.requireModule = function (module) {
-  return require(fs.realpathSync('./') + '/resources/' + module);
+  var safeModule = path.normalize(module).replace(/^(\.\.[\/\\])+/, '');
+
+  return require(resourcesPath + safeModule);
 }
