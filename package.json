@@ -1,6 +1,6 @@
 {
   "name": "dpd-codemodule",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Deployd module to create reusable code modules that can be required by event scripts.",
   "main": "index.js",
   "repository": {
